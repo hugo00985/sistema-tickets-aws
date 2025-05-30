@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Crear Ticket</title>
+</head>
+<body>
+  <h1>Formulario de Soporte</h1>
+  <form id="ticketForm">
+    <label>Nombre:</label><br>
+    <input type="text" id="nombre"><br>
+    <label>Correo:</label><br>
+    <input type="email" id="correo"><br>
+    <label>Problema:</label><br>
+    <textarea id="mensaje"></textarea><br><br>
+    <button type="submit">Enviar Ticket</button>
+  </form>
+
+  <script>
+    document.getElementById('ticketForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const ticket = {
+        nombre: document.getElementById('nombre').value,
+        correo: document.getElementById('correo').value,
+        mensaje: document.getElementById('mensaje').value,
+      };
+
+      const respuesta = await fetch('AQUI_VA_EL_ENDPOINT', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(ticket)
+      });
+
+      if (respuesta.ok) {
+        alert("Ticket enviado correctamente");
+      } else {
+        alert("Error al enviar el ticket");
+      }
+    });
+  </script>
+</body>
+</html>

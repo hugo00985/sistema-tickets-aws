@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Lista de Tickets</title>
+  <title>Tickets Recibidos</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -60,6 +60,12 @@
     .back-button a:hover {
       text-decoration: underline;
     }
+
+    .mensaje-error {
+      text-align: center;
+      color: red;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
@@ -78,18 +84,26 @@
         <!-- Aquí se insertan los tickets -->
       </tbody>
     </table>
+    <div id="error" class="mensaje-error"></div>
     <div class="back-button">
       <a href="index.html">← Volver al formulario</a>
     </div>
   </div>
 
   <script>
-    const API_URL = 'https://TU_LAMBDA_LISTAR_TICKETS.lambda-url.us-east-1.on.aws/';
+    const API_URL = 'https://xshpz4ayk4utjos3tw6s4eqzvq0hcpjb.lambda-url.us-east-1.on.aws/';
 
     fetch(API_URL)
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) throw new Error("Error al obtener los datos");
+        return response.json();
+      })
       .then(tickets => {
         const tabla = document.querySelector("#tablaTickets tbody");
+        if (!tickets.length) {
+          document.getElementById("error").innerText = "No hay tickets para mostrar.";
+          return;
+        }
         tickets.forEach(ticket => {
           const fila = document.createElement("tr");
           fila.innerHTML = `
@@ -102,7 +116,8 @@
         });
       })
       .catch(error => {
-        console.error("Error al obtener los tickets:", error);
+        document.getElementById("error").innerText = "Error al cargar los tickets.";
+        console.error(error);
       });
   </script>
 </body>
